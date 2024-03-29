@@ -1,0 +1,53 @@
+////////////////////////////////////////////////////////////////////////////////
+//   ActIni.cc
+//
+//   Definitions of ActIni class's member functions.
+// All actions must be initialized here in order to use multi thread.
+//
+//                       - 18. Dec. 2023. Hoyong Jeong (hoyong5419@korea.ac.kr)
+////////////////////////////////////////////////////////////////////////////////
+
+#include "ActIni.hh"
+#include "PriGenAct.hh"
+#include "RunAct.hh"
+#include "EveAct.hh"
+#include "SteAct.hh"
+
+//////////////////////////////////////////////////
+//   Constructor
+//////////////////////////////////////////////////
+ActIni::ActIni(): G4VUserActionInitialization()
+{
+}
+
+//////////////////////////////////////////////////
+//   Destructor
+//////////////////////////////////////////////////
+ActIni::~ActIni()
+{
+}
+
+//////////////////////////////////////////////////
+//   Build For Master
+//////////////////////////////////////////////////
+void ActIni::BuildForMaster() const
+{
+	// So, this part is for master. This program is possible to do multithread.
+	// A thread will care things as a master.
+	SetUserAction(new RunAct());
+}
+
+//////////////////////////////////////////////////
+//   Build
+//////////////////////////////////////////////////
+void ActIni::Build() const
+{
+	// All user actions are here.
+	SetUserAction(new PriGenAct());
+	SetUserAction(new RunAct());
+
+	EveAct* EA = new EveAct();
+	SetUserAction(EA);
+
+	SetUserAction(new SteAct(EA));
+}
